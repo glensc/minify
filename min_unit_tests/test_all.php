@@ -18,3 +18,4 @@ require 'test_HTTP_Encoder.php';
 require 'test_HTTP_ConditionalGet.php';
 require 'test_JSMin.php';
 require 'test_environment.php';
+require 'test_issue-28.php';
