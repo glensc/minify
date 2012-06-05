@@ -69,7 +69,7 @@ class Minify_HTML_Helper {
         if ($debug) {
             $path .= "&debug";
         } elseif ($farExpires && $this->_lastModified) {
-            $path .= "&" . $this->_lastModified;
+            $path .= "&" . ($this->_lastModified + $this->_filePathChecksum);
         }
         return $path;
     }
@@ -105,11 +105,39 @@ class Minify_HTML_Helper {
                 $gc = (require $this->groupsConfigFile);
                 if (isset($gc[$key])) {
                     $this->_lastModified = self::getLastModified($gc[$key]);
+                    $this->_filePathChecksum = self::getFilePathCheckSum($gc[$key]);
                 }
             }
         }
     }
-    
+
+	/**
+	 * @param Minify_Source[] $sources
+	 * @return float|null the checksum
+	 */
+    public static function getFilePathCheckSum($sources)
+    {
+        $paths = array();
+        foreach ((array)$sources as $source) {
+            if (is_object($source) && isset($source->filepath)) {
+                $paths[] = $source->filepath;
+            } elseif (is_string($source)) {
+                if (0 === strpos($source, '//')) {
+                    $source = $_SERVER['DOCUMENT_ROOT'] . substr($source, 1);
+                }
+                if (is_file($source)) {
+                    $paths[] = $source;
+                }
+            }
+        }
+
+        if (!empty($paths)) {
+			// cast to float so arithmetic would work on 32 and 64bit PHP
+            return (float )sprintf("%u", crc32(serialize($paths)));
+        }
+        return null;
+    }
+
     public static function getLastModified($sources, $lastModified = 0)
     {
         $max = $lastModified;
@@ -130,9 +158,9 @@ class Minify_HTML_Helper {
 
     protected $_groupKey = null; // if present, URI will be like g=...
     protected $_filePaths = array();
+    protected $_filePathChecksum = null;
     protected $_lastModified = null;
 
-    
     /**
      * In a given array of strings, find the character they all have at
      * a particular index
@@ -157,11 +185,11 @@ class Minify_HTML_Helper {
      *
      * @param array $paths root-relative URIs of files
      * @param string $minRoot root-relative URI of the "min" application
+     * @return string
      */
     protected static function _getShortestUri($paths, $minRoot = '/min/') {
         $pos = 0;
         $base = '';
-        $c;
         while (true) {
             $c = self::_getCommonCharAtPos($paths, $pos);
             if ($c === '') {
