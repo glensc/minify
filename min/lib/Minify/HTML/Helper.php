@@ -111,16 +111,17 @@ class Minify_HTML_Helper {
         }
     }
 
-	/**
+    /**
      * Calculate checksum for $sources
      * Take into account of files path, mtimes and create checksum from that
      * The checksum is rounded to be 32bit unsigned integer to be portable for 32/64bit PHP's
      *
-	 * @param Minify_Source[] $sources
-	 * @return float|null the checksum
-	 */
+     * @param Minify_Source[] $sources
+     * @return float|null the checksum
+     */
     public static function getChecksum($sources)
     {
+
         $paths = array();
         $mtime = (float )0;
 
@@ -146,7 +147,7 @@ class Minify_HTML_Helper {
         }
 
         if (!empty($paths)) {
-			// cast to float so arithmetic would work on 32 and 64bit PHP
+            // cast to float so arithmetic would work on 32 and 64bit PHP
             return ($mtime & 0xFFFF) + (float )sprintf("%u", crc32(serialize($paths)));
         }
         return null;
