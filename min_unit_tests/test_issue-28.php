@@ -7,25 +7,6 @@
 require_once '_inc.php';
 require_once 'Minify/HTML/Helper.php';
 
-function test_bug28_mtime()
-{
-    $fiveSecondsAgo = $_SERVER['REQUEST_TIME'] - 5;
-
-    $file1 = new stdClass();
-    $file1->lastModified = $fiveSecondsAgo;
-
-    $file2 = new stdClass();
-    $file2->lastModified = $fiveSecondsAgo;
-
-    $m1 = Minify_HTML_Helper::getLastModified(array($file1));
-    error_log("last modified: $m1");
-
-    $m2 = Minify_HTML_Helper::getLastModified(array($file1, $file2));
-    error_log("last modified: $m2");
-
-    assertTrue($m1 !== $m2, "mtime of group with one and two files should not be same");
-}
-
 /**
  * check that geturi differs if file count remains change, but files change
  * @see https://github.com/mrclay/minify/issues/28#issuecomment-6036867
@@ -135,6 +116,5 @@ function test_bug28_geturi_older_file()
     assertTrue($uri1 !== $uri3, "older file replaced with newer file (but older than newest file)");
 }
 
-test_bug28_mtime();
 test_bug28_geturi();
 test_bug28_geturi_older_file();
