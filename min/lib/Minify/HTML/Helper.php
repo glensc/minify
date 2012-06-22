@@ -68,8 +68,8 @@ class Minify_HTML_Helper {
         }
         if ($debug) {
             $path .= "&debug";
-        } elseif ($farExpires && $this->_lastModified) {
-            $path .= "&" . ($this->_lastModified + $this->_filePathChecksum);
+        } elseif ($farExpires && $this->_checksum) {
+            $path .= "&" . $this->_checksum;
         }
         return $path;
     }
@@ -105,35 +105,49 @@ class Minify_HTML_Helper {
                 $gc = (require $this->groupsConfigFile);
                 if (isset($gc[$key])) {
                     $this->_lastModified = self::getLastModified($gc[$key]);
-                    $this->_filePathChecksum = self::getFilePathCheckSum($gc[$key]);
+                    $this->_checksum = self::getChecksum($gc[$key]);
                 }
             }
         }
     }
 
 	/**
+     * Calculate checksum for $sources
+     * Take into account of files path, mtimes and create checksum from that
+     * The checksum is rounded to be 32bit unsigned integer to be portable for 32/64bit PHP's
+     *
 	 * @param Minify_Source[] $sources
 	 * @return float|null the checksum
 	 */
-    public static function getFilePathCheckSum($sources)
+    public static function getChecksum($sources)
     {
         $paths = array();
+        $mtime = (float )0;
+
+        /** @var Minify_Source $source */
         foreach ((array)$sources as $source) {
-            if (is_object($source) && isset($source->filepath)) {
-                $paths[] = $source->filepath;
+            if (is_object($source)) {
+                if (isset($source->filepath)) {
+                    $paths[] = $source->filepath;
+                }
+                if (isset($source->lastModified)) {
+                    $mtime += $source->lastModified;
+                }
+
             } elseif (is_string($source)) {
                 if (0 === strpos($source, '//')) {
                     $source = $_SERVER['DOCUMENT_ROOT'] . substr($source, 1);
                 }
                 if (is_file($source)) {
                     $paths[] = $source;
+                    $mtime += filemtime($source);
                 }
             }
         }
 
         if (!empty($paths)) {
 			// cast to float so arithmetic would work on 32 and 64bit PHP
-            return (float )sprintf("%u", crc32(serialize($paths)));
+            return ($mtime & 0xFFFF) + (float )sprintf("%u", crc32(serialize($paths)));
         }
         return null;
     }
@@ -158,7 +172,11 @@ class Minify_HTML_Helper {
 
     protected $_groupKey = null; // if present, URI will be like g=...
     protected $_filePaths = array();
-    protected $_filePathChecksum = null;
+    /**
+     * Checksum of mtimes and filepaths
+     * @var float
+     */
+    protected $_checksum = 0;
     protected $_lastModified = null;
 
     /**

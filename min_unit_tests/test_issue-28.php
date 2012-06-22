@@ -72,6 +72,8 @@ function test_bug28_geturi()
 /**
  * tests that replacing older file (that is still older than newest file) generates new checksum
  * @see https://github.com/mrclay/minify/issues/28#issuecomment-6505012
+ * @see Minify_HTML_Helper::getRawUri()
+ * @see Minify_HTML_Helper::getChecksum()
  */
 function test_bug28_geturi_older_file()
 {
