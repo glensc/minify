@@ -22,6 +22,8 @@ class Minify_Source implements Minify_SourceInterface {
         return $this->lastModified;
     }
 
+    protected $lastModified = null;
+    
     /**
      * {@inheritdoc}
      */
@@ -82,6 +84,8 @@ class Minify_Source implements Minify_SourceInterface {
             case 'js'   : $this->contentType = 'application/x-javascript';
                           break;
             case 'css'  : $this->contentType = 'text/css';
+                          break;
+            case 'less' : $this->contentType = 'text/less';
                           break;
             case 'htm'  : // fallthrough
             case 'html' : $this->contentType = 'text/html';
@@ -150,11 +154,6 @@ class Minify_Source implements Minify_SourceInterface {
             $this->minifyOptions['currentDir'] = dirname($this->filepath);
         }
     }
-
-    /**
-     * @var int time of last modification
-     */
-    protected $lastModified = null;
 
     /**
      * @var callback minifier function specifically for this source.
