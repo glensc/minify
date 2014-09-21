@@ -1,11 +1,16 @@
 <?php
+/**
+ * Interface Minify_CacheInterface
+ * @package Minify
+ */
+
 
 /**
- * Class Minify_Cache_Null
+ * Interface for Minify cache adapters
  *
  * @package Minify
  */
-class Minify_Cache_Null implements Minify_CacheInterface {
+interface Minify_CacheInterface {
     /**
      * Write data to cache.
      *
@@ -14,9 +19,7 @@ class Minify_Cache_Null implements Minify_CacheInterface {
      *
      * @return bool success
      */
-    public function store($id, $data)
-    {
-    }
+    public function store($id, $data);
 
     /**
      * Get the size of a cache entry
@@ -25,9 +28,7 @@ class Minify_Cache_Null implements Minify_CacheInterface {
      *
      * @return int size in bytes
      */
-    public function getSize($id)
-    {
-    }
+    public function getSize($id);
 
     /**
      * Does a valid cache entry exist?
@@ -37,18 +38,14 @@ class Minify_Cache_Null implements Minify_CacheInterface {
      *
      * @return bool exists
      */
-    public function isValid($id, $srcMtime)
-    {
-    }
+    public function isValid($id, $srcMtime);
 
     /**
      * Send the cached content to output
      *
      * @param string $id cache id (e.g. a filename)
      */
-    public function display($id)
-    {
-    }
+    public function display($id);
 
     /**
      * Fetch the cached content
@@ -57,7 +54,5 @@ class Minify_Cache_Null implements Minify_CacheInterface {
      *
      * @return string
      */
-    public function fetch($id)
-    {
-    }
+    public function fetch($id);
 }
