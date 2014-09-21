@@ -43,6 +43,7 @@ class LessCss_Source extends Minify_Source {
      * @return string
      */
     public function getContent() {
+        error_log(basename(__FILE__) . '::' . __FUNCTION__);
         $cache = $this->getCache();
         return $cache['compiled'];
     }

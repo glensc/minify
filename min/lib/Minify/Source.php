@@ -83,9 +83,8 @@ class Minify_Source implements Minify_SourceInterface {
             switch ($ext) {
             case 'js'   : $this->contentType = 'application/x-javascript';
                           break;
+            case 'less' : // fallthrough
             case 'css'  : $this->contentType = 'text/css';
-                          break;
-            case 'less' : $this->contentType = 'text/less';
                           break;
             case 'htm'  : // fallthrough
             case 'html' : $this->contentType = 'text/html';
