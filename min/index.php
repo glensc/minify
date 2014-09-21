@@ -29,7 +29,6 @@ if (isset($_GET['test'])) {
 }
 
 require "$min_libPath/Minify/Loader.php";
-Minify_Loader::register();
 
 Minify::$uploaderHoursBehind = $min_uploaderHoursBehind;
 Minify::setCache(
