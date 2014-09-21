@@ -207,7 +207,7 @@ class Minify_Controller_MinApp extends Minify_Controller_Base {
         }
 
         if (pathinfo($file, PATHINFO_EXTENSION) == 'less') {
-            return new LessCss_Source($spec);
+            return new Minify_LessCssSource($spec);
         }
         return new Minify_Source($spec);
     }

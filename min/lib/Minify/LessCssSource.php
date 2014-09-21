@@ -1,6 +1,6 @@
 <?php
 
-class LessCss_Source extends Minify_Source {
+class Minify_LessCssSource extends Minify_Source {
     /**
      * @var Minify_Cache_Abstract
      */
