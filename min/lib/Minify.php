@@ -85,6 +85,19 @@ class Minify {
             self::$_cache = $cache;
         }
     }
+
+    /**
+     * Get Minify cache, if no Cache is defined, create Minify_Cache_Null
+     *
+     * @return Minify_Cache_Abstract
+     */
+    public static function getCache()
+    {
+        if (!self::$_cache) {
+            self::$_cache = new Minify_Cache_Null();
+        }
+        return self::$_cache;
+    }
     
     /**
      * Serve a request for a minified file. 
@@ -345,7 +358,7 @@ class Minify {
             );
         }
     }
-    
+
     /**
      * Return combined minified content for a set of sources
      *
@@ -396,7 +409,7 @@ class Minify {
     /**
      * Any Minify_Cache_* object or null (i.e. no server cache is used)
      *
-     * @var Minify_Cache_File
+     * @var Minify_Cache_Abstract
      */
     private static $_cache = null;
     
@@ -430,7 +443,7 @@ class Minify {
         header('Content-Type: text/html; charset=utf-8');
         echo "<h1>$h1</h1>";
         echo "<p>Please see <a href='$url'>$url</a>.</p>";
-        exit();
+        exit;
     }
 
     /**
