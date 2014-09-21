@@ -43,7 +43,6 @@ class LessCss_Source extends Minify_Source {
      * @return string
      */
     public function getContent() {
-        error_log(basename(__FILE__) . '::' . __FUNCTION__);
         $cache = $this->getCache();
         return $cache['compiled'];
     }
@@ -57,7 +56,6 @@ class LessCss_Source extends Minify_Source {
         // cache for single run
         // so that getLastModified and getContent in single request do not add additional cache roundtrips (i.e memcache)
         if (isset($this->parsed)) {
-            error_log("RETURN PARSED");
             return $this->parsed;
         }
 

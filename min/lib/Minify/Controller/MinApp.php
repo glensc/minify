@@ -197,7 +197,6 @@ class Minify_Controller_MinApp extends Minify_Controller_Base {
      */
     protected function _getFileSource($file, $cOptions)
     {
-        error_log(__FILE__ . "::" . __FUNCTION__);
         $spec['filepath'] = $file;
         if ($cOptions['noMinPattern'] && preg_match($cOptions['noMinPattern'], basename($file))) {
             if (preg_match('~\.css$~i', $file)) {
@@ -208,7 +207,6 @@ class Minify_Controller_MinApp extends Minify_Controller_Base {
         }
 
         if (pathinfo($file, PATHINFO_EXTENSION) == 'less') {
-            error_log("FORCE LESS");
             return new LessCss_Source($spec);
         }
         return new Minify_Source($spec);
