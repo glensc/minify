@@ -46,6 +46,8 @@ class LessCss_Source extends Minify_Source {
      * @return array
      */
     private function getCache() {
+        // TODO: cache for single run. for getLastModified and getContent in single request
+
         // check from cache first
         $cache = null;
         $cacheId = $this->getCacheId();
