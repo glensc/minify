@@ -19,8 +19,6 @@ class Minify_Source implements Minify_SourceInterface {
      * @var int time of last modification
      */
     protected $lastModified = null;
-
-    protected $lastModified = null;
     
     /**
      * @var callback minifier function specifically for this source.

@@ -156,10 +156,6 @@ class Minify_Controller_MinApp extends Minify_Controller_Base {
             return new Minify_ServeConfiguration($options);
         }
 
-        return new Minify_Source($spec);
-    }
-
-    protected $_type = null;
         if (null !== $firstMissingResource) {
             array_unshift($sources, new Minify_Source(array(
                 'id' => 'missingFile'
