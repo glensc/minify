@@ -30,10 +30,6 @@ class Minify_LessCssSource extends Minify_Source {
     public function getLastModified() {
         $cache = $this->getCache();
 
-	    echo "<pre>";
-	    print_r($cache); die;
-
-
         $lastModified = 0;
         foreach ($cache['files'] as $mtime) {
             $lastModified = max($lastModified, $mtime);
@@ -49,7 +45,7 @@ class Minify_LessCssSource extends Minify_Source {
      */
     public function getContent() {
         $cache = $this->getCache();
-	    print_r($cache); die;
+
         return $cache['compiled'];
     }
 
