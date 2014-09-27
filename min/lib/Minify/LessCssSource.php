@@ -2,7 +2,7 @@
 
 class Minify_LessCssSource extends Minify_Source {
     /**
-     * @var Minify_Cache_Abstract
+     * @var Minify_CacheInterface
      */
     private $cache;
 

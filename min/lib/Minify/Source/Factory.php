@@ -66,6 +66,10 @@ class Minify_Source_Factory {
         $this->setHandler('~\.(js|css)$~i', function ($spec) {
             return new Minify_Source($spec);
         });
+
+	    $this->setHandler('~\.less$~i', function ($spec) {
+		    return new Minify_LessCssSource($spec);
+	    });
     }
 
     /**
@@ -142,7 +146,7 @@ class Minify_Source_Factory {
         $basename = basename($spec['filepath']);
 
         if ($this->options['noMinPattern'] && preg_match($this->options['noMinPattern'], $basename)) {
-            if (preg_match('~\.css$~i', $basename)) {
+            if (preg_match('~\.(css|less)$~i', $basename)) {
                 $spec['minifyOptions']['compress'] = false;
                 // we still want URI rewriting to work for CSS
             } else {
