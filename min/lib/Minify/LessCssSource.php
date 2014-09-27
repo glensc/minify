@@ -16,10 +16,10 @@ class Minify_LessCssSource extends Minify_Source {
     /**
      * @inheritdoc
      */
-    public function __construct($spec) {
+    public function __construct(array $spec, Minify_CacheInterface $cache) {
         parent::__construct($spec);
 
-        $this->cache = Minify::getCache();
+        $this->cache = $cache;
     }
 
     /**
@@ -29,6 +29,11 @@ class Minify_LessCssSource extends Minify_Source {
      */
     public function getLastModified() {
         $cache = $this->getCache();
+
+	    echo "<pre>";
+	    print_r($cache); die;
+
+
         $lastModified = 0;
         foreach ($cache['files'] as $mtime) {
             $lastModified = max($lastModified, $mtime);
@@ -44,6 +49,7 @@ class Minify_LessCssSource extends Minify_Source {
      */
     public function getContent() {
         $cache = $this->getCache();
+	    print_r($cache); die;
         return $cache['compiled'];
     }
 

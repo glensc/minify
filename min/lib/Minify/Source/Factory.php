@@ -41,7 +41,7 @@ class Minify_Source_Factory {
      *                         moves back, this should not be needed.
      *
      */
-    public function __construct(Minify_Env $env, array $options = array())
+    public function __construct(Minify_Env $env, array $options = array(), Minify_CacheInterface $cache = null)
     {
         $this->env = $env;
         $this->options = array_merge(array(
@@ -63,13 +63,13 @@ class Minify_Source_Factory {
             throw new InvalidArgumentException("fileChecker option is not callable");
         }
 
+	    $this->setHandler('~\.less$~i', function ($spec) use ($cache) {
+		    return new Minify_LessCssSource($spec, $cache);
+	    });
+
         $this->setHandler('~\.(js|css)$~i', function ($spec) {
             return new Minify_Source($spec);
         });
-
-	    $this->setHandler('~\.less$~i', function ($spec) {
-		    return new Minify_LessCssSource($spec);
-	    });
     }
 
     /**
