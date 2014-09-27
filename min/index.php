@@ -101,6 +101,8 @@ if ($env->get('f') || null !== $env->get('g')) {
     exit;
 }
 
+die("not serving");
+
 // not serving
 if ($min_enableBuilder) {
     header('Location: builder/');

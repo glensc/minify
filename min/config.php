@@ -10,7 +10,7 @@
 /**
  * Allow use of the Minify URI Builder app. Only set this to true while you need it.
  */
-$min_enableBuilder = false;
+$min_enableBuilder = true;
 
 /**
  * If non-empty, the Builder will be protected with HTTP Digest auth.
@@ -27,7 +27,7 @@ $min_builderPassword = 'admin';
  * If you want to use a custom error logger, set this to your logger
  * instance. Your object should have a method log(string $message).
  */
-$min_errorLogger = false;
+$min_errorLogger = true;
 
 
 /**
@@ -42,7 +42,7 @@ $min_errorLogger = false;
  * In 'debug' mode, Minify combines files with no minification and adds comments
  * to indicate line #s of the original files.
  */
-$min_allowDebugFlag = false;
+$min_allowDebugFlag = true;
 
 
 /**
@@ -71,7 +71,8 @@ $min_allowDebugFlag = false;
  * If /min/ is directly inside your document root, just uncomment the 
  * second line. The third line might work on some Apache servers.
  */
-$min_documentRoot = '';
+//$min_documentRoot = '';
+$min_documentRoot = dirname(dirname(dirname(__FILE__)));
 //$min_documentRoot = substr(__FILE__, 0, -15);
 //$min_documentRoot = $_SERVER['SUBDOMAIN_DOCUMENT_ROOT'];
 
