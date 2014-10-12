@@ -64,7 +64,6 @@ class Minify_LessCssSource extends Minify_Source {
         // check from cache first
         $cache = null;
         $cacheId = $this->getCacheId();
-        // TODO: validate with mtime?
         if ($this->cache->isValid($cacheId, 0)) {
             if ($cache = $this->cache->fetch($cacheId)) {
                 $cache = unserialize($cache);
