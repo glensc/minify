@@ -1,8 +1,7 @@
 <?php
 
+require dirname(__FILE__) . '/../min/lib/Minify/Loader.php';
 require dirname(__FILE__) . '/../min/config.php';
-
-require "$min_libPath/Minify/Loader.php";
 
 // set cache path and doc root if configured
 $minifyCachePath = isset($min_cachePath) 

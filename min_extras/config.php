@@ -4,8 +4,6 @@
 
 require dirname(__FILE__) . '/../min/config.php';
 
-require "$min_libPath/Minify/Loader.php";
-
 $minifyCachePath = isset($min_cachePath) 
     ? $min_cachePath 
     : '';

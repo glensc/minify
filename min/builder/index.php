@@ -22,9 +22,8 @@ if (0 === strpos($_SERVER["SERVER_SOFTWARE"], 'Apache/')
     }
 }
 
+require dirname(__FILE__) . '/../lib/Minify/Loader.php';
 require dirname(__FILE__) . '/../config.php';
-
-require "$min_libPath/Minify/Loader.php";
 
 if (! $min_enableBuilder) {
     header('Content-Type: text/plain');
