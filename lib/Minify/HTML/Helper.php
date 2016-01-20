@@ -105,6 +105,30 @@ class Minify_HTML_Helper {
     }
 
     /**
+     * Load groups config and cache a singleton
+     *
+     * @return array
+     */
+    private function getGroupsConfig() {
+        static $gc;
+
+        if (!isset($gc)) {
+            if (!$this->groupsConfigFile) {
+                // FIXME: do this in constructor?
+                $this->groupsConfigFile = dirname(dirname(dirname(__DIR__))) . '/groupsConfig.php';
+            }
+            if (is_file($this->groupsConfigFile)) {
+                $gc = (require $this->groupsConfigFile);
+            } else {
+                // set value, so won't attempt to load it again
+                $gc = false;
+            }
+        }
+
+        return $gc ?: null;
+    }
+
+    /**
      * Set the group of files that will comprise the URI we're building
      *
      * @param string $key
@@ -114,23 +138,76 @@ class Minify_HTML_Helper {
     {
         $this->_groupKey = $key;
         if ($checkLastModified) {
-            if (! $this->groupsConfigFile) {
-                $this->groupsConfigFile = dirname(dirname(dirname(__DIR__))) . '/groupsConfig.php';
-            }
-            if (is_file($this->groupsConfigFile)) {
-                $gc = (require $this->groupsConfigFile);
-                $keys = explode(',', $key);
-                foreach ($keys as $key) {
-                    if (!isset($gc[$key])) {
-                        // this can happen if value is null
-                        // which could be solved with array_filter
-                        continue;
-                    }
-
-                    $this->_lastModified = self::getLastModified($gc[$key], $this->_lastModified);
-                }
+            $keys = array_filter(explode(',', $key));
+            foreach ($keys as $key) {
+                $sources = $this->getSources($key);
+                $this->_lastModified = self::getLastModified($sources, $this->_lastModified);
             }
         }
+    }
+
+    /** @var Minify_SourceInterface[] */
+    private $sources;
+
+    /**
+     * Get Sources defined by $key in groupsConfig.
+     * Converts filenames to Source objects using SourceFactory
+     *
+     * @param string $key
+     * @return Minify_SourceInterface[]
+     */
+    private function getSources($key) {
+        if (!$key) {
+            return null;
+        }
+
+        // cache
+        if (!isset($this->sources[$key])) {
+            $sources = array();
+
+            $gc = $this->getGroupsConfig();
+            if ($gc) {
+                $factory = $this->getSourceFactory();
+
+                $items = $gc[$key];
+                if (!is_array($items)) {
+                    // handle key=>file config value
+                    $items = array($items);
+                }
+
+                foreach ($items as $filepath) {
+                    $spec = array('filepath' => $filepath);
+                    $sources[] = $factory->makeSource($spec);
+                }
+            }
+            $this->sources[$key] = $sources;
+        }
+
+        return $this->sources[$key] ?: null;
+    }
+
+    /**
+     * Get instance of SourceFactory
+     * FIXME: how to provide own factory setup?
+     *
+     * @return Minify_Source_Factory
+     */
+    private function getSourceFactory() {
+        static $factory;
+
+        if (!isset($factory)) {
+            $cache = new Minify_Cache_File();
+            $options = array(
+                // do not need to check files here
+                'fileChecker' => null,
+                // nor check allowed dirs
+                // or that would cause different signature?
+                'checkAllowDirs' => null,
+            );
+            $factory = new Minify_Source_Factory(new Minify_Env(), $options, $cache);
+        }
+
+        return $factory;
     }
 
     /**
